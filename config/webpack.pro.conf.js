@@ -1,23 +1,38 @@
 'use strict'
+process.env.NODE_ENV = 'production'
 const webpack = require('webpack')
-const {merge} = require('webpack-merge')
+const TerserPlugin = require('terser-webpack-plugin')
+const {
+	merge
+} = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf.js')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = merge(baseConfig, {
 	mode: 'production',
-	devtool: 'eval-cheap-source-map',
+	devtool: 'cheap-module-source-map',
+	optimization: {
+		usedExports:true,
+		minimize: true,
+		minimizer: [new TerserPlugin({
+			parallel: true,
+			terserOptions: {
+				ecma: 5,
+				ie8: false,
+				compress: {
+					unused: true,
+					dead_code:true,
+					drop_debugger: true,
+					// drop_console: true,
+				},
+				sourceMap: true,
+			},
+		})],
+	},
 	plugins: [
-		// new UglifyJsPlugin({
-		// 	test: /\.js($|\?)/i,
-		// 	exclude: /node_modules/,
-		// 	uglifyOptions: {
-		// 		compress: {
-		// 			drop_console: true,
-		// 			warnings: false
-		// 		}
-		// 	},
-		// 	sourceMap: true,
-		// }),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[id].css'
+		})
 	],
-	
+
 })

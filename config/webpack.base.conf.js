@@ -1,11 +1,25 @@
 'use strict'
+const devMode = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack')
 const path = require('path')
 const htmlwebpackplugin = require('html-webpack-plugin')
 const CopyPlugin = require("copy-webpack-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {
 	CleanWebpackPlugin
 } = require('clean-webpack-plugin')
+const postcssloader = {
+	loader: 'postcss-loader',
+	options: {
+		postcssOptions: {
+			plugins: [
+				require('autoprefixer')({
+					"overrideBrowserlist": [">0.25%", "not dead"]
+				})
+			]
+		}
+	}
+}
 
 module.exports = {
 	entry: './src/main',
@@ -34,14 +48,16 @@ module.exports = {
 			},
 			{
 				test: /\.css$/i,
+				exclude: /node_modules/,
 				use: [
-					'style-loader','css-loader', 'postcss-loader'
+					devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', postcssloader
 				]
 			},
 			{
 				test: /\.s[ac]ss$/i,
+				exclude: /node_modules/,
 				use: [
-					'style-loader','css-loader', 'sass-loader', 'postcss-loader'
+					'style-loader', 'css-loader', 'sass-loader', postcssloader
 				]
 			},
 			{
@@ -50,7 +66,16 @@ module.exports = {
 				use: {
 					loader: 'babel-loader',
 					options: {
-						presets: ['@babel/preset-env']
+						presets: ['@babel/preset-env'],
+						plugins: [
+							[
+								"@babel/plugin-transform-runtime",
+								{
+									"corejs": 3
+								}
+							]
+						]
+
 					}
 				}
 			}
