@@ -5,9 +5,6 @@ const path = require('path')
 const htmlwebpackplugin = require('html-webpack-plugin')
 const CopyPlugin = require("copy-webpack-plugin")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const {
-	CleanWebpackPlugin
-} = require('clean-webpack-plugin')
 const postcssloader = {
 	loader: 'postcss-loader',
 	options: {
@@ -28,6 +25,7 @@ module.exports = {
 		filename: '[name].[hash].js'
 	},
 	resolve: {
+		extensions: ['.tsx', '.ts', '.js'],
 		alias: {
 			'@': path.resolve(__dirname, '../src')
 		}
@@ -78,7 +76,17 @@ module.exports = {
 
 					}
 				}
-			}
+			},
+			{
+				test: /\.(ts|tsx)$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'ts-loader',
+					options: {
+						configFile: path.resolve(__dirname, '../tsconfig.json'),
+					},
+				}
+			},
 		]
 	},
 	plugins: [
@@ -89,10 +97,10 @@ module.exports = {
 		}),
 		new CopyPlugin({
 			patterns: [{
-				from: "public",
-				to: "public"
+				from: path.resolve(__dirname, '../public'),
+				to: path.resolve(__dirname, '../output/public')
 			}]
 		}),
-		new CleanWebpackPlugin(),
+		
 	]
 }

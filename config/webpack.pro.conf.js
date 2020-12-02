@@ -3,6 +3,9 @@ process.env.NODE_ENV = 'production'
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const {
+	CleanWebpackPlugin
+} = require('clean-webpack-plugin')
+const {
 	merge
 } = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf.js')
@@ -32,7 +35,8 @@ module.exports = merge(baseConfig, {
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css'
-		})
+		}),
+		new CleanWebpackPlugin(),
 	],
 
 })
