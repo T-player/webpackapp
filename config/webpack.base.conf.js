@@ -2,9 +2,9 @@
 const devMode = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack')
 const path = require('path')
-const htmlwebpackplugin = require('html-webpack-plugin')
+const htmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require("copy-webpack-plugin")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const postcssloader = {
 	loader: 'postcss-loader',
 	options: {
@@ -22,7 +22,8 @@ module.exports = {
 	entry: './src/main',
 	output: {
 		path: path.resolve(__dirname, '../output'),
-		filename: '[name].[hash].js'
+		filename: '[name].[chunkhash].js',
+		chunkFilename: 'js/[name][chunkhash]',
 	},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
@@ -30,18 +31,36 @@ module.exports = {
 			'@': path.resolve(__dirname, '../src')
 		}
 	},
-	devServer: {
-		contentBase: path.join(__dirname, "../output"),
-		compress: true,
-		host: 'localhost',
-		port: 9000,
-		open: false,
+	optimization: {
+		splitChunks: {
+			chunks: 'all',
+			minSize: 30000,
+			cacheGroups: {
+				vendors: {
+					test: /[\\/]node_modules[\\/]/,
+					priority: -10
+				},
+				default: {
+					minChunks: 2,
+					priority: -20,
+					reuseExistingChunk: true
+				},
+				lodash: {
+					name: 'chunk-lodash',
+					priority: 20,
+					test: /[\\/]node_modules[\\/]lodash[\\/]/
+				}
+			}
+		}
 	},
 	module: {
 		rules: [{
 				test: /\.(png|jpe?g|gif)$/i,
 				use: [{
 					loader: 'url-loader',
+					options: {
+						limit: 2048
+					}
 				}, ],
 			},
 			{
@@ -69,11 +88,11 @@ module.exports = {
 							[
 								"@babel/plugin-transform-runtime",
 								{
-									"corejs": 3
+									"corejs": 3,
+									"useBuildIn": "usage"
 								}
 							]
 						]
-
 					}
 				}
 			},
@@ -90,7 +109,7 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new htmlwebpackplugin({
+		new htmlWebpackPlugin({
 			title: 'fullapp',
 			template: path.resolve(__dirname, '../src/index.html'),
 			filename: 'index.html'
@@ -101,6 +120,5 @@ module.exports = {
 				to: path.resolve(__dirname, '../output/public')
 			}]
 		}),
-		
 	]
 }

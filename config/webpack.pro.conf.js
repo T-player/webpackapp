@@ -10,7 +10,9 @@ const {
 } = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf.js')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-module.exports = merge(baseConfig, {
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+const mergeConfig = merge(baseConfig, {
 	mode: 'production',
 	devtool: 'cheap-module-source-map',
 	optimization: {
@@ -36,7 +38,9 @@ module.exports = merge(baseConfig, {
 			filename: '[name].css',
 			chunkFilename: '[id].css'
 		}),
+		new BundleAnalyzerPlugin(),
 		new CleanWebpackPlugin(),
 	],
 
 })
+module.exports = mergeConfig
