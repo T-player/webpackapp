@@ -59,7 +59,7 @@ module.exports = {
 				use: [{
 					loader: 'url-loader',
 					options: {
-						limit: 2048
+						limit: 20480
 					}
 				}, ],
 			},
