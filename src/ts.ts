@@ -1,6 +1,6 @@
 
 export const getNum = (n: number) => {
-		return n+2;
+		return n+4;
 	}
 export class test{
 	val: string

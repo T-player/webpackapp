@@ -5,6 +5,7 @@ const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require("copy-webpack-plugin")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const SizePlugin = require('size-plugin');
 const postcssloader = {
 	loader: 'postcss-loader',
 	options: {
@@ -32,6 +33,9 @@ module.exports = {
 		}
 	},
 	optimization: {
+		runtimeChunk: {
+			name: 'runtime'
+		},
 		splitChunks: {
 			chunks: 'all',
 			minSize: 30000,
@@ -109,6 +113,7 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new SizePlugin(),
 		new htmlWebpackPlugin({
 			title: 'fullapp',
 			template: path.resolve(__dirname, '../src/index.html'),

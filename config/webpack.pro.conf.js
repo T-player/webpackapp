@@ -5,6 +5,8 @@ const TerserPlugin = require('terser-webpack-plugin')
 const {
 	CleanWebpackPlugin
 } = require('clean-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CssNano = require('cssnano');
 const {
 	merge
 } = require('webpack-merge')
@@ -31,9 +33,21 @@ const mergeConfig = merge(baseConfig, {
 				},
 				sourceMap: true,
 			},
+		}),
+		// css文件压缩
+		new OptimizeCSSAssetsPlugin({
+			assetNameRegExp: /\.(sa|sc|c)ss$/g,
+			cssProcessor: CssNano,
+			cssProcessorOptions: {
+				safe: true,
+				discardComments: { removeAll: true }, //移除css注释
+				normalizeUnicode: false //建议false,否则在使用unicode-range的时候会产生乱码
+			},
+			canPrint: true,
 		})],
 	},
 	plugins: [
+		// css文件单独提出
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css'

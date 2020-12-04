@@ -2,6 +2,7 @@
 import '@/pic.css'
 import n,{getNum,test} from '@/ts'
 import {join} from 'lodash'
+
 function vv(){
 	const arr = [1,3];
 	const cc = {a:1,b:1};
@@ -10,6 +11,7 @@ function vv(){
 	const t = new test(1)
 	console.log(t.val,join(['Hello', 'webpack'], ' '))
 	const dom = document.createElement('div');
+	dom.innerText = getNum(2);
 	document.body.appendChild(dom);
 }
 vv();
