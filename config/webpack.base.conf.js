@@ -1,10 +1,10 @@
 'use strict'
 const devMode = process.env.NODE_ENV !== 'production';
-const webpack = require('webpack')
-const path = require('path')
-const htmlWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require("copy-webpack-plugin")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack');
+const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SizePlugin = require('size-plugin');
 const postcssloader = {
 	loader: 'postcss-loader',
